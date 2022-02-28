@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Login from './components/Login';
+import Header from './components/Header';
+import CreatePost from './components/CreatePost';
+import PostList from './components/PostList';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+function App(){
+    const [user, setUser] = React.useState('Mahmoud');
+    const [posts, setPosts] = React.useState([])
+
+React.useEffect(() => {
+    document.title = user ? `${user}'s Feed` : "Pleae login"; // changing the title of the webpage
+}, [user]);
+
+
+function handleAddPost(newPost){
+ setPosts([newPost, ...posts]);
+}
+
+    if(!user){
+        return <Login setUser= {setUser} />
+    }
+
+    return (
+        <>
+        <Header user={user} setUser = {setUser} /> 
+        <CreatePost user={user} handleAddPost={handleAddPost} />
+        <PostList posts = {posts} />
+        </>
+        );
 }
 
 export default App;
