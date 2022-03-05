@@ -3,6 +3,7 @@ import Login from './components/Login';
 import Header from './components/Header';
 import CreatePost from './components/CreatePost';
 import PostList from './components/PostList';
+import postReducer from './reducer';
 
 export const UserContext = React.createContext()
 export const PostContext = React.createContext({
@@ -11,8 +12,8 @@ export const PostContext = React.createContext({
 
 
 function App(){
-    const initialtate = React.useContext(PostContext)
-    const [state, dispatch] = React.useReducer(() => {}, initialPostState);
+    const initialPostState = React.useContext(PostContext)
+    const [state, dispatch] = React.useReducer(postReducer, initialPostState);
     const [user, setUser] = React.useState('Mahmoud');
     // const [posts, setPosts] = React.useState([])
 
@@ -20,12 +21,12 @@ React.useEffect(() => {
     document.title = user ? `${user}'s Feed` : "Pleae login"; // changing the title of the webpage
 }, [user]);
 
-const handleAddPost = React.useCallback(
-    newPost => {
-        setPosts({newPost, ...state.posts})
-    },
-    [posts]
-);
+// const handleAddPost = React.useCallback(
+//     newPost => {
+//         setPosts({newPost, ...state.posts})
+//     },
+//     [posts]
+// );
 
 
     if(!user){
@@ -33,11 +34,13 @@ const handleAddPost = React.useCallback(
     }
 
     return (
+        <PostContext.Provider value ={{state, dispatch}}>
         <UserContext.Provider value={user}>
         <Header user={user} setUser ={setUser} /> 
-        <CreatePost user={user} handleAddPost={handleAddPost} />
-        <PostList posts={posts} />
+        <CreatePost user={user} /*handleAddPost={handleAddPost} */ />
+        <PostList posts={state.posts} />
         </UserContext.Provider>
+        </PostContext.Provider>
         );
 }
 
